@@ -1,0 +1,30 @@
+{
+  "name": "bridge-message-center",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Presence-aware, policy-gated MCP message center for locally logged-in clients.",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "check": "tsc -p tsconfig.json --noEmit",
+    "dev": "tsx src/index.ts",
+    "relay": "tsx src/cloud-relay.ts",
+    "unified-relay": "tsx src/unified-relay.ts",
+    "start": "node dist/src/index.js",
+    "test": "node --import tsx --test test/**/*.test.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/node": "2.0.0",
+    "@modelcontextprotocol/server": "2.0.0",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/client": "2.0.0",
+    "@types/node": "26.4.0",
+    "tsx": "4.23.12",
+    "typescript": "7.0.2"
+  }
+}

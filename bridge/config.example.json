@@ -1,0 +1,100 @@
+{
+  "mode": "dry_run",
+  "transport": "stdio",
+  "adapter": "spool",
+  "runtimeDir": "./runtime",
+  "stagingDir": "./runtime/staging",
+  "leaseSeconds": 300,
+  "maxLongPollMs": 30000,
+  "presence": {
+    "quiescentAfterSeconds": 120,
+    "awayAfterSeconds": 600,
+    "requireAwayForLiveReply": true
+  },
+  "http": {
+    "host": "127.0.0.1",
+    "port": 7319,
+    "tokenEnv": "BRIDGE_MCP_BEARER_TOKEN"
+  },
+  "device": {
+    "pythonPath": "python",
+    "cliPath": "./local-adapters/device_connector.py",
+    "pollIntervalMs": 3000,
+    "messageLimit": 100,
+    "ingestHistory": false,
+    "layoutControl": {
+      "enabled": false,
+      "cliPath": "./local-adapters/layout_control.py",
+      "pollIntervalMs": 60000,
+      "administratorOverrideLocalLock": true
+    },
+    "profiles": [
+      {
+        "id": "profile-a",
+        "displayName": "primary logged-in client",
+        "driver": "element",
+        "targetBundleEnv": "BRIDGE_PROFILE_A_TARGET",
+        "navigationTemplateEnv": "BRIDGE_PROFILE_A_NAVIGATION",
+        "conversations": [
+          {
+            "alias": "conversation-aaaaaaaa",
+            "displayName": "trusted operations",
+            "assurance": "verified",
+            "conversationType": "group",
+            "groupDelivery": "mentions_and_requests",
+            "mentionTerms": ["@agent"],
+            "contextBefore": 20,
+            "enabled": true
+          }
+        ]
+      },
+      {
+        "id": "profile-b",
+        "displayName": "secondary logged-in client",
+        "driver": "context",
+        "targetBundleEnv": "BRIDGE_PROFILE_B_TARGET",
+        "navigationTemplateEnv": "BRIDGE_PROFILE_B_NAVIGATION",
+        "discoverDirectConversations": true,
+        "discoverGroupConversations": true,
+        "discoveryConversationLimit": 200,
+        "discoveryMessageLimit": 100,
+        "discoveryCatchupSeconds": 3600,
+        "discoveryActiveWindowSeconds": 604800,
+        "historyWindowSeconds": 604800,
+        "historyRevision": 1,
+        "conversations": [
+          {
+            "alias": "conversation-bbbbbbbb",
+            "displayName": "self transfer",
+            "assurance": "verified",
+            "conversationType": "direct",
+            "groupDelivery": "all",
+            "contextBefore": 0,
+            "enabled": true
+          }
+        ]
+      }
+    ]
+  },
+  "defaultUntrustedReplyPolicy": "informational",
+  "groups": [
+    {
+      "conversationId": "conversation-aaaaaaaa",
+      "enabled": true,
+      "requireVerifiedIdentity": true,
+      "allowedSenderIds": ["member-cccccccc"],
+      "requiredPrefix": "/agent",
+      "projectIds": ["example-service"],
+      "allowedActions": [
+        "status",
+        "diagnose",
+        "test",
+        "patch_branch",
+        "send_text",
+        "files_read",
+        "files_download"
+      ],
+      "replyPolicy": "scoped_agent"
+    }
+  ]
+}
